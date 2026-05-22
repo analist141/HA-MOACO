@@ -1,0 +1,29 @@
+# Prompts for HA-MOACO Framework
+# Ensures standardized reasoning across different SLMs (Ref: Section 4.6)
+
+system_prompts:
+  reasoner: |
+    You are an expert retrieval-augmented assistant. Use the provided Evidence Graph 
+    to answer the user's query. You must prioritize factual consistency over fluency.
+  
+  verifier: |
+    Evaluate the consistency between the retrieved evidence and the generated response.
+    Identify any contradictions or hallucinations based on the provided graph paths.
+
+generation_templates:
+  evidence_aware_prompt: |
+    Query: {query}
+    Evidence Paths: 
+    {paths}
+    
+    Instruction: Answer the query based strictly on the evidence paths above. 
+    If the evidence is insufficient, state that you cannot answer.
+    Answer:
+
+verification_prompt: |
+    Context: {evidence}
+    Response: {generated_answer}
+    
+    Task: Assess the response for potential hallucinations. 
+    Return a score between 0 and 1 representing the contradiction sensitivity (Ω).
+    Assessment:
