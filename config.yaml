@@ -1,0 +1,39 @@
+# HA-MOACO Framework Configuration
+# Refer to Section 4.6 (Implementation Details) for sensitivity analysis of these parameters.
+
+model_settings:
+  slm_backbone: "microsoft/phi-2"  # Options: TinyLlama-1.1B, phi-2, Mistral-7B-v0.1
+  precision: "16-bit"
+  device: "cuda:0"
+  random_seed: 42
+
+graph_params:
+  # Weights for Edge Formulation (Eq 1)
+  alpha_w: 0.35  # Semantic similarity weight
+  beta_w: 0.25   # Support/Evidence weight
+  gamma_w: 0.20  # Citation/Authority weight
+  delta_w: 0.20  # Contradiction penalty weight
+
+aco_optimization:
+  # HA-MOACO specific hyperparameters (Section 3.3)
+  alpha: 1.0     # Pheromone importance
+  beta: 2.0      # Heuristic importance
+  gamma: 1.5     # Semantic path coherence (Ψ)
+  delta: 1.2     # Contradiction sensitivity (Ω)
+  rho: 0.1       # Pheromone evaporation rate
+  lambda: 0.8    # Global reinforcement factor
+  max_iterations: 100
+  num_ants: 20
+
+decoding_steer:
+  # Inference-time constraints (Section 3.4)
+  theta1: 0.5    # Contextual support strength
+  theta2: 0.7    # Hallucination suppression weight
+  temperature: 0.1 # Strictly low for deterministic grounding
+  top_p: 0.95
+
+dataset_config:
+  benchmark: "HotpotQA"
+  split: "validation"
+  data_path: "./data/processed_eval.json"
+  use_official_test_set: true
